@@ -11,6 +11,11 @@ import {
 } from '../utils/formatters';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { CircleDollarSign, TrendingDown, TrendingUp } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const CryptoTable = () => {
   const dispatch = useDispatch();
