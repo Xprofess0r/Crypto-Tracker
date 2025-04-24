@@ -205,7 +205,11 @@ const CryptoTable = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{crypto.id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    {getCryptoIcon()}
+                  <img
+            src={`/icons/${crypto.name.toLowerCase()}.svg`}  // Using the SVG file based on the crypto symbol
+            alt={`${crypto.symbol} logo`}
+            className="h-6 w-6 mr-2 inline-block"
+          />
                     <div className="ml-4">
                       <Tooltip>
                         <TooltipTrigger asChild>
