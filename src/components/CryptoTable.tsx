@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { updatePrices } from '../store/cryptoSlice';
+import { updatePrices, selectCryptos } from '../store/cryptoSlice';
 import {
   formatPrice,
   formatPercent,
@@ -10,11 +10,11 @@ import {
   formatSupply,
 } from '../utils/formatters';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
-import { Bitcoin, Ethereum, TrendingDown, TrendingUp } from 'lucide-react';
+import { CircleDollarSign, TrendingDown, TrendingUp } from 'lucide-react';
 
 const CryptoTable = () => {
   const dispatch = useDispatch();
-  const cryptos = useSelector((state: RootState) => state.crypto.cryptos);
+  const cryptos = useSelector(selectCryptos);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,15 +24,8 @@ const CryptoTable = () => {
     return () => clearInterval(interval);
   }, [dispatch]);
 
-  const getCryptoIcon = (symbol: string) => {
-    switch (symbol) {
-      case 'BTC':
-        return <Bitcoin className="h-6 w-6" />;
-      case 'ETH':
-        return <Ethereum className="h-6 w-6" />;
-      default:
-        return null;
-    }
+  const getCryptoIcon = () => {
+    return <CircleDollarSign className="h-6 w-6" />;
   };
 
   const getChangeColor = (change: number) => {
@@ -63,6 +56,7 @@ const CryptoTable = () => {
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Market Cap</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Volume(24h)</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Circulating Supply</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Max Supply</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Last 7 Days</th>
             </tr>
           </thead>
@@ -72,7 +66,7 @@ const CryptoTable = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{crypto.id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    {getCryptoIcon(crypto.symbol)}
+                    {getCryptoIcon()}
                     <div className="ml-4">
                       <div className="text-sm font-medium text-gray-900">{crypto.name}</div>
                       <div className="text-sm text-gray-500">{crypto.symbol}</div>
@@ -108,6 +102,9 @@ const CryptoTable = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-mono">
                   {formatSupply(crypto.circulatingSupply)} {crypto.symbol}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-mono">
+                  {crypto.maxSupply ? `${formatSupply(crypto.maxSupply)} ${crypto.symbol}` : '∞'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="w-24 h-12">
