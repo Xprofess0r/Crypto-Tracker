@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: (https://cryptostraccking.netlify.app/)
+**URL**: https://cryptostraccking.netlify.app/
 
 
 **Use your preferred IDE**
@@ -15,10 +15,10 @@ Follow these steps:
 
 ```sh
 # Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+git clone https://github.com/Xprofess0r/Crypto-Tracker.git
 
 # Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+cd Crypto-Tracker
 
 # Step 3: Install the necessary dependencies.
 npm i
@@ -39,6 +39,5 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
-
-## Can I connect a custom domain to my Lovable project?
+# Demo Video Link - https://drive.google.com/file/d/1iGilY4xpw7SBQZrVwDP-at39F8yZ9DOy/view?usp=sharing
 
