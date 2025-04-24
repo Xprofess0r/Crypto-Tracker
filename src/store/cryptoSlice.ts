@@ -1,5 +1,5 @@
 
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface CryptoData {
   id: number;
@@ -16,8 +16,15 @@ export interface CryptoData {
   sparklineData: number[];
 }
 
+export type SortField = 'name' | 'price' | 'change1h' | 'change24h' | 'change7d' | 'marketCap' | 'volume24h';
+export type SortDirection = 'asc' | 'desc';
+export type FilterType = 'all' | 'gainers' | 'losers' | 'stablecoins';
+
 interface CryptoState {
   cryptos: CryptoData[];
+  sortField: SortField;
+  sortDirection: SortDirection;
+  filterType: FilterType;
   loading: boolean;
   error: string | null;
 }
@@ -95,13 +102,42 @@ const initialState: CryptoState = {
       sparklineData: [175, 180, 185, 182, 186, 189, 188.34],
     }
   ],
+  sortField: 'marketCap',
+  sortDirection: 'desc',
+  filterType: 'all',
   loading: false,
   error: null,
 };
 
+// Load state from localStorage if available
+const loadState = (): Partial<CryptoState> => {
+  try {
+    const serializedState = localStorage.getItem('cryptoState');
+    if (serializedState === null) {
+      return {};
+    }
+    const savedState = JSON.parse(serializedState);
+    return {
+      sortField: savedState.sortField || initialState.sortField,
+      sortDirection: savedState.sortDirection || initialState.sortDirection,
+      filterType: savedState.filterType || initialState.filterType,
+    };
+  } catch (err) {
+    console.error('Failed to load state from localStorage', err);
+    return {};
+  }
+};
+
+// Initialize state with localStorage values if available
+const savedState = loadState();
+const mergedInitialState = {
+  ...initialState,
+  ...savedState,
+};
+
 const cryptoSlice = createSlice({
   name: 'crypto',
-  initialState,
+  initialState: mergedInitialState,
   reducers: {
     updatePrices: (state) => {
       state.cryptos = state.cryptos.map(crypto => ({
@@ -113,10 +149,61 @@ const cryptoSlice = createSlice({
         sparklineData: [...crypto.sparklineData.slice(1), crypto.price],
       }));
     },
+    setSortField: (state, action: PayloadAction<SortField>) => {
+      if (state.sortField === action.payload) {
+        // Toggle direction if clicking the same field
+        state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        state.sortField = action.payload;
+        state.sortDirection = 'desc'; // Default to descending for new sort field
+      }
+      // Save sort preferences to localStorage
+      localStorage.setItem('cryptoState', JSON.stringify({
+        sortField: state.sortField,
+        sortDirection: state.sortDirection,
+        filterType: state.filterType,
+      }));
+    },
+    setFilterType: (state, action: PayloadAction<FilterType>) => {
+      state.filterType = action.payload;
+      // Save filter preferences to localStorage
+      localStorage.setItem('cryptoState', JSON.stringify({
+        sortField: state.sortField,
+        sortDirection: state.sortDirection,
+        filterType: state.filterType,
+      }));
+    },
   },
 });
 
-export const selectCryptos = (state: { crypto: CryptoState }) => state.crypto.cryptos;
+// Selectors
+export const selectCryptos = (state: { crypto: CryptoState }) => {
+  const { cryptos, sortField, sortDirection, filterType } = state.crypto;
+  
+  // Apply filters first
+  let filteredCryptos = [...cryptos];
+  if (filterType === 'gainers') {
+    filteredCryptos = filteredCryptos.filter(crypto => crypto.change24h > 0);
+  } else if (filterType === 'losers') {
+    filteredCryptos = filteredCryptos.filter(crypto => crypto.change24h < 0);
+  } else if (filterType === 'stablecoins') {
+    filteredCryptos = filteredCryptos.filter(crypto => 
+      Math.abs(crypto.change24h) < 0.5 && Math.abs(crypto.change7d) < 1);
+  }
+  
+  // Then apply sorting
+  return filteredCryptos.sort((a, b) => {
+    if (sortDirection === 'asc') {
+      return a[sortField] > b[sortField] ? 1 : -1;
+    } else {
+      return a[sortField] < b[sortField] ? 1 : -1;
+    }
+  });
+};
 
-export const { updatePrices } = cryptoSlice.actions;
+export const selectSortField = (state: { crypto: CryptoState }) => state.crypto.sortField;
+export const selectSortDirection = (state: { crypto: CryptoState }) => state.crypto.sortDirection;
+export const selectFilterType = (state: { crypto: CryptoState }) => state.crypto.filterType;
+
+export const { updatePrices, setSortField, setFilterType } = cryptoSlice.actions;
 export default cryptoSlice.reducer;
