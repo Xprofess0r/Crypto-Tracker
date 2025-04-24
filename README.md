@@ -39,5 +39,6 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
-# Demo Video Link - https://drive.google.com/file/d/1iGilY4xpw7SBQZrVwDP-at39F8yZ9DOy/view?usp=sharing
+# Demo Video Link - 
+https://drive.google.com/file/d/1iGilY4xpw7SBQZrVwDP-at39F8yZ9DOy/view?usp=sharing
 
