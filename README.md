@@ -1,4 +1,5 @@
-Crypto Tracker - Market Beat Visualizer -- https://cryptostraccking.netlify.app/
+Crypto Tracker - Market Beat Visualizer
+Demo Link: https://cryptostraccking.netlify.app/
 A cryptocurrency market visualization tool that provides real-time market data and visualizations for various cryptocurrencies.
 
 Prerequisites
@@ -9,16 +10,27 @@ Node.js (LTS version) - Download here
 Git - Download here
 
 Setup Instructions
-
 1. Clone the Repository
 First, clone the repository to your local machine:
+
+bash
+Copy
+Edit
 git clone https://github.com/your-username/Crypto-Tracker.git
 cd Crypto-Tracker
 2. Install Dependencies
 Run the following command to install all the necessary dependencies:
+
+bash
+Copy
+Edit
 npm install
 3. Run the Application
 Once everything is set up, you can run the application in development mode:
+
+bash
+Copy
+Edit
 npm run dev
 The app should be available at http://localhost:8080 in your browser.
 
@@ -36,7 +48,6 @@ React-Redux - For state management
 
 Axios - For making API requests to fetch cryptocurrency data
 
-
 Architecture
 This project follows a component-based architecture using React. The major components include:
 
@@ -52,4 +63,5 @@ Each component is modular and reusable, with the table component being the core 
 
 Demo
 Watch the demo below:
-[Watch the Demo Video](https://www.youtube.com/watch?v=your-video-id)
+
+Watch the Demo Video
